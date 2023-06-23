@@ -67,10 +67,17 @@
                     @Html.DisplayFor(modelItem => item.Amount)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.PaymentDate)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.EmployeeNavigation.Id)
+                    @if (item.PaymentDate != null)
+                    {
+                        <text>Service has been paid. Employee: </text>
+
+                        @Html.DisplayFor(modelItem => item.EmployeeNavigation.Name)
+                    }
+                    else
+                    {
+                        <text>Unpaid</text>
+                    }
+                           
                 </td>
 
             </tr>
@@ -93,11 +100,10 @@
         })
             .then(response => response.json())
             .then(data => {
-                // Xóa dữ liệu cũ trong bảng
                 var tbody = document.querySelector('table.table tbody');
                 tbody.innerHTML = '';
 
-                // Thêm dữ liệu mới vào bảng
+
                 data.forEach(service => {
                     var row = document.createElement('tr');
                     row.innerHTML = `
