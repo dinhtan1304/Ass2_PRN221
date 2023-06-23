@@ -1,0 +1,67 @@
+﻿<Window x:Class="Q1.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Q1"
+        mc:Ignorable="d"
+         Title="Employee Management" Width="800"
+ WindowStartupLocation="CenterScreen" ResizeMode="NoResize" >
+    <Grid>
+        <DockPanel VerticalAlignment="Top" Margin="10">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="4*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <!--StackPanel for Label and TextBox controls-->
+                <StackPanel Background="LightBlue" Orientation ="Vertical" HorizontalAlignment="Left" Width="400">
+                    <Label Name="lbTitle" Foreground="Red" FontWeight="DemiBold" FontSize="20" Content="Employee Information" />
+
+                    <Label Name="lbEmployeeId" Content="Employee Id"/>
+                    <TextBox IsReadOnly="True" Name="txtEmployeeId" HorizontalAlignment="Stretch" Height="25" Text="{Binding Path=Id, Mode=OneWay}" DataContext="{Binding ElementName=lvEmployee, Path=SelectedItem}" />
+
+                    <Label Name="lbEmployeeName" Content="Employee Name" />
+                    <TextBox Name="txtEmployeeName" HorizontalAlignment="Stretch" Height="25" Text="{Binding Path=Name, Mode=OneWay}" DataContext="{Binding ElementName=lvEmployee, Path=SelectedItem}" />
+
+                    <Label Name="lbGender" Content="Gender" />
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                        <RadioButton x:Name="RadioMale" Content="Male" IsChecked="True"/>
+                        <RadioButton x:Name="RadioFemale" Content="Famale"/>
+                    </StackPanel>
+
+                    <Label Name="lbDate" Content="Date of birth" />
+                    <DatePicker Name="txtDate" HorizontalAlignment="Stretch" Height="25" Text="{Binding Path=Dob, Mode=OneWay}" DataContext="{Binding ElementName=lvEmployee, Path=SelectedItem}" />
+
+                    <Label Name="lbPhone" Content="Phone" />
+                    <TextBox Name="txtPhone" HorizontalAlignment="Stretch" Height="25" Text="{Binding Path=Phone, Mode=OneWay}" DataContext="{Binding ElementName=lvEmployee, Path=SelectedItem}" />
+
+                    <Label Name="lbIdNumber" Content="IDNumber" />
+                    <TextBox Name="txtIdNumber" HorizontalAlignment="Stretch" Height="25" Text="{Binding Idnumber, Mode=OneWay}" DataContext="{Binding ElementName=lvEmployee, Path=SelectedItem}" />
+                </StackPanel>
+                <!--StackPanel for Button controls-->
+                <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Left">
+                    <Button x:Name="btnLoad" Margin="10" Width="80" Content="Refresh" Click="btnLoad_Click"/>
+                    <Button x:Name="btnInsert" Margin="10" Width="80" Content="Insert" Click="btnInsert_Click"/>
+                    <Button x:Name="btnUpdate" Margin="10" Width="80" Content="Update" Click="btnUpdate_Click"/>
+                    <Button x:Name="btnDelete" Margin="10" Width="80" Content="Delete" Click="btnDelete_Click"/>
+                </StackPanel>
+                <!--ListView control-->
+                <ListView Grid.Row="2" Name="lvEmployee" Width="Auto" Height="Auto" PreviewMouseLeftButtonUp="lvEmployee_PreviewMouseLeftButtonUp">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Employee ID" Width="100" DisplayMemberBinding="{Binding Path=Id }"/>
+                            <GridViewColumn Header="Employee Name" Width="150" DisplayMemberBinding="{Binding Path=Name}"/>
+                            <GridViewColumn Header="Gender" Width="100" DisplayMemberBinding="{Binding Path=Gender }"/>
+                            <GridViewColumn Header="Date of birth" Width="150" DisplayMemberBinding="{Binding Path=Dob,StringFormat='dd/MM/yyyy'}"/>
+                            <GridViewColumn Header="Phone" Width="150" DisplayMemberBinding="{Binding Path=Phone}"/>
+                            <GridViewColumn Header="IDNumber" Width="100" DisplayMemberBinding="{Binding Path=Idnumber}"/>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </Grid>
+        </DockPanel>
+    </Grid>
+</Window>

@@ -1,0 +1,119 @@
+﻿@page
+@model Q2.Pages.List.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Service Manager</h1>
+<form asp-page="./Index" method="get">
+    <div class="form-actions no-color">
+        <p>
+            Room
+            <input class="ms-1 mb-2" type="text" name="SearchString" value="@Model.SearchRoom" />
+                </br>
+                <input class="ms-5" type="submit" name="Search"/>
+        </p>
+    </div>
+</form>
+<h3>List of services</h3>
+@using (Html.BeginForm("ImportServices", "YourController", FormMethod.Post, new { enctype = "multipart/form-data", id = "importForm" }))
+{
+    <input type="file" name="file" />
+    <input type="submit" value="Import" />
+}
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Service[0].RoomTitle)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Service[0].FeeType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Service[0].Month) 
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Service[0].Year)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Service[0].Amount)
+            </th>
+            <th>
+
+            </th>
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Service)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RoomTitleNavigation.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FeeType)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => (item.Month))
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Year)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Amount)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PaymentDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EmployeeNavigation.Id)
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>
+<script>
+    document.getElementById('importForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        var fileInput = document.getElementById('fileInput');
+        var file = fileInput.files[0];
+
+        var formData = new FormData();
+        formData.append('file', file);
+
+        fetch('/YourController/ImportServices', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
+                // Xóa dữ liệu cũ trong bảng
+                var tbody = document.querySelector('table.table tbody');
+                tbody.innerHTML = '';
+
+                // Thêm dữ liệu mới vào bảng
+                data.forEach(service => {
+                    var row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${service.roomTitle}</td>
+                        <td>${service.feeType}</td>
+                        <td>${service.month}</td>
+                        <td>${service.year}</td>
+                        <td>${service.amount}</td>
+                        <td>${service.paymentDate}</td>
+                        <td>${service.employeeId}</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    });
+</script>
