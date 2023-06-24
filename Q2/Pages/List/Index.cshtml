@@ -17,7 +17,7 @@
     </div>
 </form>
 <h3>List of services</h3>
-@using (Html.BeginForm("ImportServices", "YourController", FormMethod.Post, new { enctype = "multipart/form-data", id = "importForm" }))
+@using (Html.BeginForm("ImportServices", "List", FormMethod.Post, new { enctype = "multipart/form-data", id = "importForm" }))
 {
     <input type="file" name="file" />
     <input type="submit" value="Import" />
@@ -48,78 +48,46 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.Service)
+
+        @if(Model.Service != null)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.RoomTitleNavigation.Title)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.FeeType)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => (item.Month))
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Year)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Amount)
-                </td>
-                <td>
-                    @if (item.PaymentDate != null)
-                    {
-                        <text>Service has been paid. Employee: </text>
+            foreach (var item in Model.Service)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.RoomTitleNavigation.Title)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FeeType)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => (item.Month))
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Year)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Amount)
+                    </td>
+                    <td>
+                        @if (item.PaymentDate != null)
+                        {
+                            <text>Service has been paid. Employee: </text>
 
-                        @Html.DisplayFor(modelItem => item.EmployeeNavigation.Name)
-                    }
-                    else
-                    {
-                        <text>Unpaid</text>
-                    }
-                           
-                </td>
+                            @Html.DisplayFor(modelItem => item.EmployeeNavigation.Name)
+                        }
+                        else
+                        {
+                            <text>Unpaid</text>
+                        }
 
-            </tr>
+                    </td>
+
+                </tr>
+            }
+        }else
+        {
+            <p>No services found.</p>
         }
     </tbody>
 </table>
-<script>
-    document.getElementById('importForm').addEventListener('submit', function (e) {
-        e.preventDefault();
-
-        var fileInput = document.getElementById('fileInput');
-        var file = fileInput.files[0];
-
-        var formData = new FormData();
-        formData.append('file', file);
-
-        fetch('/YourController/ImportServices', {
-            method: 'POST',
-            body: formData
-        })
-            .then(response => response.json())
-            .then(data => {
-                var tbody = document.querySelector('table.table tbody');
-                tbody.innerHTML = '';
-
-
-                data.forEach(service => {
-                    var row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${service.roomTitle}</td>
-                        <td>${service.feeType}</td>
-                        <td>${service.month}</td>
-                        <td>${service.year}</td>
-                        <td>${service.amount}</td>
-                        <td>${service.paymentDate}</td>
-                        <td>${service.employeeId}</td>
-                    `;
-                    tbody.appendChild(row);
-                });
-            })
-            .catch(error => {
-                console.error(error);
-            });
-    });
-</script>
